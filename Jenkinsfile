@@ -78,11 +78,8 @@ pipeline {
       agent none
       steps {
         container('base') {
-          withCredentials([kubeconfigContent(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh '''mkdir -p ~/.kube
-              echo "$KUBECONFIG" > ~/.kube/config
-              kubectl version
-              kubectl kustomize deploy/prod | envsubst | kubectl apply -f -'''
+          withCredentials([kubeconfigFile(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+            sh 'envsubst < deploy/prod/deploy.yaml | kubectl apply -f -'
           }
 
         }
