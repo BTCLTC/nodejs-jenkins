@@ -79,7 +79,7 @@ pipeline {
       steps {
         container('base') {
           withCredentials([kubeconfigFile(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-            sh 'envsubst < deploy/prod/deploy.yaml | kubectl apply -f -'
+            sh 'kubectl kustomize deploy/prod | envsubst | kubectl apply -f -'
           }
 
         }
